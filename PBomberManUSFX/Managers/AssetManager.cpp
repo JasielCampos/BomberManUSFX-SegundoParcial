@@ -8,7 +8,7 @@ void AssetManager::load(SDL_Renderer* renderer)
         // load font
     loadFont();
     // load textures
-    loadTexture(renderer, GameTexture::MenuBack, "assets/menu_title.png");
+    loadTexture(renderer, GameTexture::MenuBack, "assets/title.png");
     loadTexture(renderer, GameTexture::Metal, "resources/muro_metal.jpg");
     loadTexture(renderer, GameTexture::Stone, "resources/muro_piedra_01.png");
     loadTexture(renderer, GameTexture::Grass, "resources/suelo_cesped_01.png");
@@ -58,7 +58,7 @@ std::shared_ptr<Mix_Chunk> AssetManager::getSound(SoundEnum sound)
 void AssetManager::loadFont()
 {
     // load font
-    font = std::shared_ptr<TTF_Font>(TTF_OpenFont("assets/font.ttf", 32), TTF_CloseFont);
+    font = std::shared_ptr<TTF_Font>(TTF_OpenFont("assets/bman.ttf", 32), TTF_CloseFont);
     if(!font)
     {
         std::cout << "TTF_OpenFont Error: " << TTF_GetError() << std::endl;

@@ -164,6 +164,7 @@
     <ClCompile Include="Entities\GameActor.cpp" />
     <ClCompile Include="Entities\GameGraphicObject.cpp" />
     <ClCompile Include="Entities\GameObject.cpp" />
+    <ClCompile Include="Entities\Mina.cpp" />
     <ClCompile Include="Entities\Music.cpp" />
     <ClCompile Include="Entities\PersonalizadoEnemy.cpp" />
     <ClCompile Include="Entities\PersonalizadoPlayer.cpp" />
@@ -179,6 +180,7 @@
     <ClCompile Include="Factories\FactoryGamePersonalizado.cpp" />
     <ClCompile Include="Factories\FactoryGameRealista.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mina.cpp" />
     <ClCompile Include="Scenes\GameLevelScene.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Managers\AssetManager.cpp" />
@@ -222,6 +224,7 @@
     <ClInclude Include="Entities\GameActor.h" />
     <ClInclude Include="Entities\GameGraphicObject.h" />
     <ClInclude Include="Entities\GameObject.h" />
+    <ClInclude Include="Entities\Mina.h" />
     <ClInclude Include="Entities\Music.h" />
     <ClInclude Include="Entities\PersonalizadoEnemy.h" />
     <ClInclude Include="Entities\PersonalizadoPlayer.h" />
@@ -237,6 +240,7 @@
     <ClInclude Include="Factories\FactoryGamePersonalizado.h" />
     <ClInclude Include="Factories\FactoryGameRealista.h" />
     <ClInclude Include="GameAITypes.h" />
+    <ClInclude Include="Mina.h" />
     <ClInclude Include="Scenes\GameLevelScene.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameTextures.h" />

@@ -23,7 +23,7 @@ const unsigned int brickSpawnRandomize = 10; // less value => more bricks
 const unsigned int doorSpawnRandomize = 10;  // less value => door is far
 const unsigned int bangSpawnCells = 5;       // bang spawn number of cells
 const unsigned int bangSpawnMinaCells = 5;
-const unsigned int minMinasOnLevel = 1; // número mínimo de minas en el nivel
+const unsigned int minMinasOnLevel = 4; // número mínimo de minas en el nivel
 const unsigned int maxMinasOnLevel = 5; // número máximo de minas en el nivel
 const unsigned int minEnemiesOnLevel = 2;    // minimum enemies count on level
 const unsigned int maxEnemiesOnLevel = 10;   // maximum enemies count on level
