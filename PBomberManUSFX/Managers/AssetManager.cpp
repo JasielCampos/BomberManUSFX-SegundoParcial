@@ -19,6 +19,7 @@ void AssetManager::load(SDL_Renderer* renderer)
     loadTexture(renderer, GameTexture::Enemy2, "assets/enemy_2.png");
     loadTexture(renderer, GameTexture::Enemy3, "assets/enemy_3.png");
     loadTexture(renderer, GameTexture::Bomb, "assets/bomb.png");
+    loadTexture(renderer, GameTexture::Mina, "assets/mina1.png");
     loadTexture(renderer, GameTexture::Explosion, "assets/explosion.png");
     loadTexture(renderer, GameTexture::Door, "assets/door.png");
     // load music

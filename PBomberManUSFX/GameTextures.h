@@ -7,6 +7,7 @@ enum class GameTexture : int
     Stone,
     Grass,
     Brick,
+    Mina,
     WallPacman,
     Player,
     Enemy1,
