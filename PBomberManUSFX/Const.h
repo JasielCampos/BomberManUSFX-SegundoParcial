@@ -12,6 +12,7 @@ enum class GameTile
     Brick,
     EmptyGrass,
     Bomb,
+    Mina,
     Bang
 };
 

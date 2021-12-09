@@ -27,3 +27,4 @@ std::shared_ptr<GameObject> FactoryGameClasico::CreateEnemy(AIType _type, const 
 
     return dynamic_pointer_cast<GameObject>(enemy);
 }
+

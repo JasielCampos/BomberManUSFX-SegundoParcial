@@ -69,6 +69,7 @@ private:
     void generateTileMap();
 
     void generateEnemies();
+    void generateMinas();
     void spawnMetal(const int positionX, const int positionY);
     void spawnGrass(const int positionX, const int positionY);
     void spawnBrick(const int positionX, const int positionY);
@@ -77,6 +78,7 @@ private:
 
     void spawnPlayer(const int positionX, const int positionY);
     void spawnEnemy(GameTexture texture, AIType type, const int positionX, const int positionY);
+    void spawnMina(GameTexture texture, const int positionX, const int positionY);
     void spawnBomb(GameGraphicObject* object);
     void spawnBang(GameGraphicObject* object);
     void spawnDoor(GameGraphicObject* object);
@@ -101,6 +103,7 @@ private:
     void updateTimers(const unsigned int delta);
     void updateLevelTimer();
     void updateBombTimer(const unsigned int delta);
+    void updateMinaTimer(const unsigned int delta);
     void updateBangTimer(const unsigned int delta);
     void updateGameOverTimer(const unsigned int delta);
     // update movement
@@ -124,6 +127,7 @@ private:
     // timers in ms const
     const int levelTimerStart = 200500;
     const int levelTimerUpdateText = 1000;
+    const int minaTimerStart = 500;
     const int bombTimerStart = 1500;
     const int bangTimerStart = 800;
     const int gameOverTimerStart = 1000;
@@ -140,8 +144,10 @@ private:
     std::shared_ptr<Text> scoreNumber = nullptr;                      // score
     std::shared_ptr<Player> player = nullptr;                         // player
     std::shared_ptr<Sprite> bomb = nullptr;                           // player's bomb
+    std::shared_ptr<Sprite> mina = nullptr;
     std::shared_ptr<Sprite> door = nullptr;                           // door for level finish
     std::vector<std::shared_ptr<Enemy>> enemies;                      // enemies
+
     std::vector<std::pair<GameTile, std::shared_ptr<GameGraphicObject>>> collisions; // collisions
     std::vector<std::shared_ptr<GameGraphicObject>> bangs;                       // bomb's bang
     GameTile tiles[tileArrayHeight][tileArrayWidth];                      // tilemap
@@ -152,6 +158,7 @@ private:
     // timer variables
     int levelTimer = levelTimerStart;
     int levelTimerDelta = 0;
+    int minaTimer = 0;
     int bombTimer = 0;
     int bangTimer = 0;
     int gameOverTimer = 0;

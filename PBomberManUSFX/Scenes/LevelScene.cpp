@@ -52,6 +52,8 @@ LevelScene::LevelScene(GameManager* _gameManager, const unsigned int _stage, con
     spawnPlayer(fieldPositionX + playerStartX * scaledTileSize, fieldPositionY + playerStartY * scaledTileSize);
     // generate enemies
     generateEnemies();
+    // generate minas
+    generateMinas();
     // set timer
     updateLevelTimer();
 }
@@ -101,6 +103,8 @@ LevelScene::LevelScene(GameManager* _gameManager, GameVersion _gameVersion, cons
         fieldPositionY + playerStartY * scaledTileSize);
     // generate enemies
     generateEnemies();
+
+    generateMinas();
     // set timer
     updateLevelTimer();
 }
@@ -322,6 +326,53 @@ void LevelScene::generateEnemies()
     }
 }
 
+void LevelScene::spawnMina(GameTexture texture, const int positionX, const int positionY)
+{
+    mina = std::make_shared<Sprite>(gameManager->getAssetManager()->getTexture(GameTexture::Mina), gameManager->getRenderer());
+    mina->setPosition(positionX, positionY);
+    mina->setSize(scaledTileSize, scaledTileSize);
+    insertObject(mina, backgroundObjectLastNumber);
+    
+    // update timer
+    minaTimer = minaTimerStart;
+    
+}
+
+void LevelScene::generateMinas()
+{
+    // we need mina in random tile
+    const auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+    auto randCount = std::bind(std::uniform_int_distribution<int>(minMinasOnLevel, maxMinasOnLevel),
+        std::mt19937(static_cast<unsigned int>(seed)));
+    
+   
+    auto randCellX = std::bind(std::uniform_int_distribution<int>(0, tileArrayHeight - 1),
+        std::mt19937(static_cast<unsigned int>(seed)));
+    auto randCellY = std::bind(std::uniform_int_distribution<int>(0, tileArrayWidth - 1),
+        std::mt19937(static_cast<unsigned int>(seed)));
+    // start enemies spawn
+    for (int i = 0; i < randCount(); i++)
+    {
+        // try to find suitable tile
+        int cellMX = randCellX();
+        int cellMY = randCellY();
+        while (tiles[cellMX][cellMY] == GameTile::Grass)
+        {
+            cellMX = randCellX();
+            cellMY = randCellY();
+        }
+        // spawn enemy
+        
+        spawnMina(GameTexture::Mina, fieldPositionX + cellMY * scaledTileSize, fieldPositionY + cellMX * scaledTileSize);
+
+        const int minaCellX = static_cast<int>(
+            round((mina->getPositionX() - fieldPositionX) / static_cast<float>(scaledTileSize)));
+        const int minaCellY = static_cast<int>(
+            round((mina->getPositionY() - fieldPositionY) / static_cast<float>(scaledTileSize)));
+        tiles[minaCellY][minaCellX] = GameTile::Mina;
+    }
+}
+
 void LevelScene::spawnBomb(GameGraphicObject* object)
 {
     // we can only have 1 bomb and should have object
@@ -375,6 +426,12 @@ void LevelScene::spawnBang(GameGraphicObject* object)
     const int bombCellY = static_cast<int>(
         round((bomb->getPositionY() - fieldPositionY) / static_cast<float>(scaledTileSize)));
     tiles[bombCellY][bombCellX] = GameTile::Grass;
+
+    const int minaCellX = static_cast<int>(
+        round((mina->getPositionX() - fieldPositionX) / static_cast<float>(scaledTileSize)));
+    const int minaCellY = static_cast<int>(
+        round((mina->getPositionY() - fieldPositionY) / static_cast<float>(scaledTileSize)));
+    tiles[minaCellY][minaCellX] = GameTile::Grass;
     // create bangs in position
     for(unsigned int i = 0; i < bangSpawnCells; i++)
     {
@@ -578,6 +635,20 @@ void LevelScene::updateBombTimer(const unsigned int delta)
         spawnBang(bomb.get());
         removeObject(bomb);
         bomb = nullptr;
+    }
+}
+
+void LevelScene::updateMinaTimer(const unsigned int delta)
+{
+    if (minaTimer > 0)
+    {
+        minaTimer -= delta;
+    }
+    else
+    {
+        spawnBang(mina.get());
+        removeObject(mina);
+        mina = nullptr;
     }
 }
 

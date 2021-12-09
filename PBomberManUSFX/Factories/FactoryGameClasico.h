@@ -35,6 +35,6 @@ public:
 
     std::shared_ptr<GameObject> CreatePlayer(const int _positionX, const int _positionY);
     std::shared_ptr<GameObject> CreateEnemy(AIType _type, const int _positionX, const int _positionY);
-    
+    //std::shared_ptr<GameObject> CreateMina(const int _positionX, const int _positionY);
 };
 
