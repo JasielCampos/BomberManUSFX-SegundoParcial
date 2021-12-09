@@ -13,7 +13,8 @@ GameManager* GameManager::instance = nullptr;
 
 GameManager* GameManager::getInstance(std::string _windowsName, int _width, int _height) {
 
-    if (instance == 0) {
+    if (instance == 0) 
+    {
         instance = new GameManager(_windowsName, _width, _height);
     }
 

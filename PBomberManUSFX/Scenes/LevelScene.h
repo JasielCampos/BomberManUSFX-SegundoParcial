@@ -81,6 +81,7 @@ private:
     void spawnMina(GameTexture texture, const int positionX, const int positionY);
     void spawnBomb(GameGraphicObject* object);
     void spawnBang(GameGraphicObject* object);
+    void spawnBangMina(GameTexture texture, const int positionX, const int positionY, const int randCount);
     void spawnDoor(GameGraphicObject* object);
 
     /**

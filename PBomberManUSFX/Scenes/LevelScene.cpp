@@ -332,13 +332,19 @@ void LevelScene::spawnMina(GameTexture texture, const int positionX, const int p
     mina->setPosition(positionX, positionY);
     mina->setSize(scaledTileSize, scaledTileSize);
     insertObject(mina, backgroundObjectLastNumber);
+
+    const int minaCellX = static_cast<int>(
+        round((mina->getPositionX() - fieldPositionX) / static_cast<float>(scaledTileSize)));
+    const int minaCellY = static_cast<int>(
+        round((mina->getPositionY() - fieldPositionY) / static_cast<float>(scaledTileSize)));
+    tiles[minaCellY][minaCellX] = GameTile::Mina;
     
     // update timer
-    minaTimer = minaTimerStart;
-    
+    bombTimer = bombTimerStart;
+
 }
 
-void LevelScene::generateMinas()
+void LevelScene::generateMinas() 
 {
     // we need mina in random tile
     const auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
@@ -350,13 +356,13 @@ void LevelScene::generateMinas()
         std::mt19937(static_cast<unsigned int>(seed)));
     auto randCellY = std::bind(std::uniform_int_distribution<int>(0, tileArrayWidth - 1),
         std::mt19937(static_cast<unsigned int>(seed)));
-    // start enemies spawn
+    // start minas spawn
     for (int i = 0; i < randCount(); i++)
     {
         // try to find suitable tile
         int cellMX = randCellX();
         int cellMY = randCellY();
-        while (tiles[cellMX][cellMY] == GameTile::Grass)
+        while (tiles[cellMX][cellMY] == GameTile::Grass )
         {
             cellMX = randCellX();
             cellMY = randCellY();
@@ -365,11 +371,7 @@ void LevelScene::generateMinas()
         
         spawnMina(GameTexture::Mina, fieldPositionX + cellMY * scaledTileSize, fieldPositionY + cellMX * scaledTileSize);
 
-        const int minaCellX = static_cast<int>(
-            round((mina->getPositionX() - fieldPositionX) / static_cast<float>(scaledTileSize)));
-        const int minaCellY = static_cast<int>(
-            round((mina->getPositionY() - fieldPositionY) / static_cast<float>(scaledTileSize)));
-        tiles[minaCellY][minaCellX] = GameTile::Mina;
+        
     }
 }
 
@@ -458,6 +460,51 @@ void LevelScene::spawnBang(GameGraphicObject* object)
         bang->addAnimation(animation);
         animation->play();
         explosionSound->play();
+    }
+    // update timer
+    bangTimer = bangTimerStart;
+}
+
+void LevelScene::spawnBangMina(GameTexture texture, const int positionX, const int positionY, const int randCount) ///
+{
+    // change to grass
+  
+    const int minaCellX = static_cast<int>(
+        round((mina->getPositionX() - fieldPositionX) / static_cast<float>(scaledTileSize)));
+    const int minaCellY = static_cast<int>(
+        round((mina->getPositionY() - fieldPositionY) / static_cast<float>(scaledTileSize)));
+    tiles[minaCellY][minaCellX] = GameTile::Grass;
+    // create bangs in position
+    for (unsigned int i = 0; i < bangSpawnCells; i++)
+    {
+        auto bang = std::make_shared<Sprite>(gameManager->getAssetManager()->getTexture(GameTexture::Explosion),
+            gameManager->getRenderer());
+        bang->setSize(scaledTileSize, scaledTileSize);
+        // 
+        for (int i = 0; i < randCount; i++)
+        {
+            bang->setPosition(mina->getPositionX() + bangSpawnPositions[i][0] * scaledTileSize,
+                mina->getPositionY() + bangSpawnPositions[i][1] * scaledTileSize);
+            addObject(bang);
+            bangs.push_back(bang);
+
+            // change to bang
+            const int bangCellX = static_cast<int>(
+                round((bang->getPositionX() - fieldPositionX) / static_cast<float>(scaledTileSize)));
+            const int bangCellY = static_cast<int>(
+                round((bang->getPositionY() - fieldPositionY) / static_cast<float>(scaledTileSize)));
+            tiles[bangCellY][bangCellX] = GameTile::Bang;
+            // animation
+            auto animation = std::make_shared<Animation>();
+            for (unsigned int j = 1; j < 12; j++)
+            {
+                animation->addAnimationEntity(AnimationEntity(tileSize * j, 0, tileSize, tileSize));
+            }
+            animation->setSprite(bang.get());
+            bang->addAnimation(animation);
+            animation->play();
+            explosionSound->play();
+        }
     }
     // update timer
     bangTimer = bangTimerStart;
@@ -588,6 +635,10 @@ void LevelScene::updateTimers(const unsigned int delta)
     {
         updateBombTimer(delta);
     }
+    /*if (mina != nullptr)
+    {
+        updateMinaTimer(delta);
+    }*/
     // update bang timer
     if(bangs.size() > 0)
     {
@@ -633,24 +684,28 @@ void LevelScene::updateBombTimer(const unsigned int delta)
     else
     {
         spawnBang(bomb.get());
-        removeObject(bomb);
-        bomb = nullptr;
-    }
-}
 
-void LevelScene::updateMinaTimer(const unsigned int delta)
-{
-    if (minaTimer > 0)
-    {
-        minaTimer -= delta;
-    }
-    else
-    {
         spawnBang(mina.get());
+        removeObject(bomb);
         removeObject(mina);
+        bomb = nullptr;
         mina = nullptr;
     }
 }
+
+//void LevelScene::updateMinaTimer(const unsigned int delta)
+//{
+//    if (minaTimer > 0)
+//    {
+//        minaTimer -= delta;
+//    }
+//    else
+//    {
+//        spawnBang(mina.get());
+//        removeObject(mina);
+//        mina = nullptr;
+//    }
+//}
 
 void LevelScene::updateBangTimer(const unsigned int delta)
 {
