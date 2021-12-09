@@ -3,5 +3,6 @@
 class Mina : public GameActor
 {
 
+
 };
 
